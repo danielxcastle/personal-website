@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
@@ -8,7 +8,15 @@ export const ContactForm = () => {
     const [email, setEmail] = useState("");
     const [datatype, setDatatype] = useState("");
     const [text, setText] = useState("");
-    const { actions } = useContext(Context);
+    const { actions, store } = useContext(Context);
+
+    useEffect(() => {
+        // Check if the user is logged in, and if so, prefill the name and email
+        if (store.user) {
+            setName(store.user.name);
+            setEmail(store.user.email);
+        }
+    }, [store.user]);
 
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -23,7 +31,6 @@ export const ContactForm = () => {
         if (success) {
             navigate('/home');
         }
-        navigate("/home")
     };
 
     return (
@@ -32,48 +39,59 @@ export const ContactForm = () => {
                 <div className="row">
                     <h1>Contact</h1>
                 </div>
-                <div className="row">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        placeholder="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </div>
-                <div className="row">
-                    <input
-                        type="text"
-                        id="email"
-                        className="form-control"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
+                {store.user ? (
+                    <>
+                        <div className="row">
+                            <p>You are logged in as {store.user.name} ({store.user.email}).</p>
+                        </div>
+                        {/* Hide name and email input fields when the user is logged in */}
+                    </>
+                ) : (
+                    <>
+                        <div className="row">
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                placeholder="Name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </div>
+                        <div className="row">
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                    </>
+                )}
                 <div className="row">
                     <h6>Is this about a new recipe or an error on our site?</h6>
                     <div className="form-check">
                         <input
                             type="radio"
-                            id="flexRadioDefault1"
+                            id="website"
                             checked={datatype === 'website'}
                             onChange={() => setDatatype('website')}
                         />
-                        <label htmlFor="flexRadioDefault1">
-                            I have an issue with the website
+                        <label htmlFor="website">
+                            I want a website made
                         </label>
                     </div>
                     <div className="form-check">
                         <input
                             type="radio"
-                            id="flexRadioDefault2"
-                            checked={datatype === 'recipe'}
-                            onChange={() => setDatatype('recipe')}
+                            id="pricing"
+                            checked={datatype === 'pricing'}
+                            onChange={() => setDatatype('pricing')}
                         />
-                        <label htmlFor="flexRadioDefault2">
-                            I have a new recipe!
+                        <label htmlFor="pricing">
+                            I would like pricing
                         </label>
                     </div>
                 </div>
@@ -97,4 +115,3 @@ export const ContactForm = () => {
         </div>
     );
 };
-

@@ -106,9 +106,6 @@ def request_reset():
     user = User.query.filter_by(email=email).first()
     if user:
         token = create_access_token(identity=email)
-        # user.reset_token = token
-        # user.token_expiration = datetime.utcnow() + timedelta(hours=1)
-        # db.session.commit()
         send_email(user.email, 'Password Reset Request', token)
         return jsonify({'message': 'If your email is in our system, you will receive a password reset link.'}) #need to get rid of "reesturl:token need to work send email function"
     return jsonify({"message":"If your email is in our system, you will receive a password reset link."}), 400
@@ -127,22 +124,24 @@ def reset_password():
 
 @api.route('/contact-requests', methods=['POST'])
 def create_contact_request():
-    data = request.get_json()
-    name = data.get('name')
-    email = data.get('email')
-    datatype = data.get('datatype')
-    text = data.get('text')
-    if not all([name, email, datatype, text]):
-        return jsonify({'error': 'Missing required fields'}), 400 
-    new_contact_request = ContactRequest(name=name, email=email, datatype=datatype, text=text)
-    print(new_contact_request.name)
-    db.session.add(new_contact_request)
     try:
-        db.session.commit()
+        data = request.get_json()
+        name = data.get('name')
+        email = data.get('email')
+        datatype = data.get('datatype')
+        text = data.get('text')
+
+        if not all([name, email, datatype, text]):
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        new_contact_request = ContactRequest(name=name, email=email, datatype=datatype, text=text)
+        print(f"New contact request: {new_contact_request.name}, {new_contact_request.email}, {new_contact_request.datatype}, {new_contact_request.text}")
         
-        return jsonify({'message': 'Contact request added successfully'}), 201  
+        db.session.add(new_contact_request)
+        db.session.commit()
+
+        return jsonify({'message': 'Contact request added successfully'}), 201
     except Exception as e:
         db.session.rollback()
-        print(e)
-        return jsonify({'error': str(e)}), 500 
-
+        print(f"Error creating contact request: {str(e)}")
+        return jsonify({'error': str(e)}), 500

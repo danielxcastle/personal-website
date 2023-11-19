@@ -12,13 +12,10 @@ export const Home = () => {
   return (
     <div className="Container">
       <div className='row'>
-      <div className='col-6 content-home'>
+      <div className='col content-home'>
         <p>
           Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,Content,
         </p>
-      </div>
-      <div className='col-6'>
-        <ContactForm />
       </div>
       </div>
     </div>
