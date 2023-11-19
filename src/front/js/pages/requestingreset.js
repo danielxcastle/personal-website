@@ -5,11 +5,8 @@ export const Sendtoken = () => {
     const baseApiUrl = process.env.BACKEND_URL || "http://127.0.0.1:3001";
     const [email, setEmail] = useState("")
     const navigate = useNavigate();
-    // const onReset = () => {
-    //     navigate("/request_reset")
-    // }
     function send_email() {
-        //  check to see if no email is typed
+
         fetch(`${baseApiUrl}/api/request_reset`, {
             method: "POST",
             headers: {

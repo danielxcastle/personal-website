@@ -7,7 +7,6 @@ from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import check_password_hash ,generate_password_hash
 from datetime import datetime,timedelta
-from api.favoriteService import addFavorite, getAllFavorites, deleteFromFavorites
 import os
 import requests
 api = Blueprint('api', __name__)
@@ -54,22 +53,17 @@ def user_sign_up():
     new_user_data = request.json
     name = new_user_data.get("name")
     email = new_user_data.get("email")
-    age = new_user_data.get("age")
     hashed_password = new_user_data.get("hashed_password")
 
-    if not name or not email or not hashed_password or not age:
+    if not name or not email or not hashed_password:
         raise APIException("Incomplete user data in the request", 400)
 
-    if int(age) < 10:
-        return jsonify(message="You must be older than 10 years old to sign up"), 400
-    elif int(age) < 21:
-        return jsonify(message="You must be 21 years or older to sign up"), 400
 
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
         raise APIException("User with this email already exists", 400)
 
-    new_user = User(name=name, email=email, hashed_password=hashed_password, age=age)
+    new_user = User(name=name, email=email, hashed_password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
 
@@ -87,11 +81,7 @@ def protected():
 
 
 def send_email(email,subject,token):
-    # email = request.json.get('email')
-    # user = User.query.filter_by(email=email).first()
-    # if not user:
-    #     return jsonify("incorrect email")
-    # token = create_access_token(identity=email)
+
     try:
         # Define the reset link
         reset_link = f"{os.environ.get('FRONT_END_URL')}request_reset?token={token}"
@@ -132,8 +122,6 @@ def reset_password():
     new_password = request.json.get('new_password')
     print(new_password)
     user.hashed_password = generate_password_hash(new_password+user.salt)
-    # user.reset_token = None
-    # user.token_expiration = None
     db.session.commit()
     return jsonify({'message': 'Password has been reset successfully.'})
 
@@ -157,35 +145,4 @@ def create_contact_request():
         db.session.rollback()
         print(e)
         return jsonify({'error': str(e)}), 500 
-
-@api.route('/favorites', methods=['POST'])
-def addToFavorites():
-    data = request.get_json()
-    user = data.get("userId")
-    cocktail = data.get("cocktailId")
-    name = data.get("name")
-    url = data.get("url")
-    result = addFavorite(user, cocktail, name, url)
-    if result is None:
-        return jsonify({'error': 'couldnt add'}), 400
-    else:
-        return jsonify({'result:' : 'successfully added to favorite'}), 201
-
-@api.route('/favorites/all', methods=['POST'])
-def getAllFav():
-    data = request.get_json()
-    user = data.get('userId')
-    favs = getAllFavorites(user)
-    print("returned ", favs)
-    favAsJson = [e.serialize() for e in favs]
-    return jsonify({'favs': favAsJson}), 200
-
-@api.route('/favorites', methods=['DELETE'])
-def removeFromFavorites():
-    data = request.get_json()
-    userId = data.get("userId")
-    drinkId = data.get("drinkId")
-    deleteFromFavorites(userId, drinkId)
-    return jsonify({"msg": "deleted"}), 200
-
 

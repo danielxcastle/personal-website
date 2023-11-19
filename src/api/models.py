@@ -12,7 +12,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    age = db.Column(db.Integer, unique=False, nullable=False)
     hashed_password = db.Column(db.String(240), unique=False, nullable=False)
     salt = db.Column(db.String(120), nullable=False)
 
@@ -27,11 +26,10 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "name": self.name,
-            "age": self.age
+            "name": self.name
         }
 
-    def __init__(self, name, hashed_password, email, age):
+    def __init__(self, name, hashed_password, email):
         already_exists = User.query.filter_by(name=name).one_or_none()
         if already_exists is not None:
             raise APIException("User already exists", 400)
@@ -39,7 +37,7 @@ class User(db.Model):
         self.hashed_password = generate_password_hash(hashed_password + self.salt)
         self.name = name
         self.email = email
-        self.age = age
+
         db.session.add(self)
         try:
             db.session.commit()
@@ -72,22 +70,3 @@ def add_contact_request(name, email, datatype, text):
     except Exception as e:
         db.session.rollback()
 
-class Favorites(db.Model):
-    __tablename__ = "favorites"
-    id = db.Column(db.Integer,primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    cocktail_id = db.Column(db.String(100), nullable=False)
-    img = db.Column(db.String(500), nullable=False)
-    user = db.relationship("User")
-    def __repr__(self):
-        return f'<Favorites {self.id}. {self.user_id} {self.cocktail_id}. {self.user}>'
-        
-    def serialize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "cocktail_id": self.cocktail_id,
-            "name": self.name,
-            "img": self.img
-        }

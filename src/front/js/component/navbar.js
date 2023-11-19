@@ -4,30 +4,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { Login } from "./login";
 import { LoggedIn } from "./loggedin";
 import { Context } from "../store/appContext";
-import CheerslogoCorner from "../../img/Headerimages/CheerslogoCorner.png";
+import NavImg from "../../img/nav-img.png";
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [enableFav, setEnableFav] = useState(false);
 
-    const toBlogPage = () => {
-        setDropdownOpen(false)
-        navigate("/BlogPage");
-    }
 
-    useEffect(() => {
-        if (store.accessToken !== undefined) {
-            setEnableFav(true);
-        } else {
-            setEnableFav(false);
-        }
-    }, [store.accessToken]);
+
+
 
     const handleLogoClick = () => {
-        navigate("/home", { state: Math.random() });
+        navigate("/home")
     };
 
     const toggleDropdown = () => {
@@ -37,14 +27,12 @@ export const Navbar = () => {
     return (
         <nav className="navbar custom-navbar-bg">
             <div className="container d-flex justify-content-align-items-center">
-                <Link to="/home" onClick={handleLogoClick}>
                     <img
-                        src={CheerslogoCorner}
+                        src={NavImg}
                         alt="Home Bar Pro"
                         className="navbar-logo"
-                        style={{ transform: 'scale(.7)' }}
+                        onClick={handleLogoClick}
                     />
-                </Link>
 
                
 
