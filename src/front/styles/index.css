@@ -56,3 +56,17 @@
   max-width: 100px;
   max-height: 100px;
 }
+.footer {
+  background-color: #000000;
+  position: absolute;
+  bottom: 0%;
+  left: 0;
+  width: 100%;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.content-home {
+    border: 1px solid #000;
+      width: 45%;
+      overflow: auto;
+}
