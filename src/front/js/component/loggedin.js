@@ -16,12 +16,8 @@ export const LoggedIn = (props) => {
         props.toggleDropdown()
         navigate('/profile')
     }
-    const onSocial = (event) => {
-        props.toggleDropdown()
-        navigate('/social');
-    }
     return (
-        <div className="container text-center">
+        <div className="text-center mt-2">
             <div className="row">
                 
                 <div className="col">
@@ -36,13 +32,6 @@ export const LoggedIn = (props) => {
                                 onClick={onProfile}
                                 className="btn btn-button"
                             >My Profile!</button>
-                        </div>
-                        <div>
-                            
-                            <button
-                                className="btn btn-button"
-                                onClick={onSocial}
-                            >Social</button>
                         </div>
                         <div>
                             

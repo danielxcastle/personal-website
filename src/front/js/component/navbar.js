@@ -9,50 +9,45 @@ import NavImg from "../../img/nav-img.png";
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
-
+  
     const [dropdownOpen, setDropdownOpen] = useState(false);
-
-
-
-
-
+  
     const handleLogoClick = () => {
-        navigate("/home")
+      navigate("/home");
     };
-
+  
     const toggleDropdown = () => {
-        setDropdownOpen(!dropdownOpen);
+      setDropdownOpen(!dropdownOpen);
     };
-
+  
     return (
-        <nav className="navbar custom-navbar-bg">
-            <div className="container d-flex justify-content-align-items-center">
-                    <img
-                        src={NavImg}
-                        alt="Home Bar Pro"
-                        className="navbar-logo"
-                        onClick={handleLogoClick}
-                    />
-
-               
-
-                <div className="dropdown-container">
-                    <button onClick={toggleDropdown} className="btn btn-button">
-                        Menu
-                    </button>
-                    {dropdownOpen && (
-                        <div className="top-right-nav">
-                            {store.accessToken !== undefined ? (
-                                <LoggedIn toggleDropdown={toggleDropdown} style={{ width: '500px', height: '400px' }} />
-                            ) : (
-                                <Login style={{ width: '300px', height: '300px' }} />
-                            )}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </nav>
+      <nav className="navbar">
+        <div className="col-3">
+          <img
+            src={NavImg}
+            className="navbar-logo"
+            onClick={handleLogoClick}
+          />
+        </div>
+        <div className="col-6"></div>
+        <div className="col-3">
+          <div className="dropdown-container">
+            <button onClick={toggleDropdown} className="btn btn-button">
+              Menu
+            </button>
+            {dropdownOpen && (
+              <div className="top-right-nav">
+                {store.accessToken !== undefined ? (
+                  <LoggedIn toggleDropdown={toggleDropdown} />
+                ) : (
+                  <Login />
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
     );
-};
-
-export default Navbar;
+  };
+  
+  export default Navbar;

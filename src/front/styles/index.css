@@ -1,17 +1,4 @@
 /* Update your existing CSS to move "Home Bar Pro" to the far left */
-
-.top-right-nav {
-  right: 5%;
-  height: 300px;
-  width: 270px;
-  justify-content: center;
-  align-items: center;
-  color: #e58be1; /* Set text color to #e58be1 */
-  position: absolute;
-  background-color: #020202; /* Set the background color to #020202 */
-  border: 1px solid #96f3f8; /* Add a border for clarity */
-  
-}
 .login-container {
   position: absolute;
   top: 0;
@@ -25,12 +12,13 @@
   overflow: visible;
 }
 .btn-button {
-  background-color: #5100FF;
-  color: white;
+  border: 1px solid #D8A43E;
+  color: #D8A43E;
 }
 .btn-button:hover {
-  border: 2px solid rgb(240, 116, 234);
-  color: #fff;
+
+  box-shadow: 2px 2px 2px 2px #D8A43E;
+  color: #f3cb7a;
 }
 .token-input {
   display: none;
@@ -38,4 +26,33 @@
 .navbar-logo {
   max-width: 200px;
   max-height: 200px;
+  float: right;
+}
+.navbar {
+  background-color: #000000;
+}
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.top-right-nav {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 270px;
+  padding: 10px;
+  background-color: #000000;
+  border-radius: 10px;
+  border: 2px solid #D8A43E;
+  color: #D8A43E;
+  z-index: 1000;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profile-pic {
+  max-width: 100px;
+  max-height: 100px;
 }

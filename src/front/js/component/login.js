@@ -26,14 +26,14 @@ export const Login = (props) => {
         <div className="text-center mt-2">
             <h1>Log in</h1>
             <input
-                className="form-control m-3"
+                className="form-control mt-3"
                 type="email"
                 placeholder="Email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
             ></input>
             <input
-                className="form-control m-3"
+                className="form-control mt-3"
                 type="password"
                 placeholder="Password"
                 value={password}
@@ -46,7 +46,7 @@ export const Login = (props) => {
                 Sign Up!
             </button>
             <br></br>
-            <button onClick={onForgot}>Forgot Password?</button>
+            <button onClick={onForgot} className="btn btn-button">Forgot Password?</button>
         </div>
     );
 };

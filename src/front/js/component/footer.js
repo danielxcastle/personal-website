@@ -12,7 +12,7 @@ export const Footer = () => {
 		navigate('/contactform');
 	}
 	return(
-		<footer className="footer mt-auto py-3 text-center">
+		<footer className="footer text-center">
 		<button className="btn btn-button" onClick={onSubmit}>Contact</button>
 		
 
