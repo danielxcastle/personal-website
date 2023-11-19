@@ -6,6 +6,7 @@ export const ContactForm = () => {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [datatype, setDatatype] = useState("");
     const [text, setText] = useState("");
     const { actions, store } = useContext(Context);
@@ -15,24 +16,33 @@ export const ContactForm = () => {
         if (store.user) {
             setName(store.user.name);
             setEmail(store.user.email);
+            setPhone(store.user.phone);
         }
     }, [store.user]);
 
     const onSubmit = async (event) => {
         event.preventDefault();
-
+    
+        console.log("Submitting form with values:", {
+            name,
+            email,
+            phone,
+            datatype,
+            text
+        });
+    
         const success = await actions.contact({
             name: name,
             email: email,
+            phone: phone,
             datatype: datatype,
             text: text
         });
-
+    
         if (success) {
             navigate('/home');
         }
     };
-
     return (
         <div className="container">
             <form onSubmit={onSubmit}>
@@ -42,9 +52,8 @@ export const ContactForm = () => {
                 {store.user ? (
                     <>
                         <div className="row">
-                            <p>You are logged in as {store.user.name} ({store.user.email}).</p>
+                            <p>You are logged in as {store.user.name} ({store.user.email}) {store.user.phone}.</p>
                         </div>
-                        {/* Hide name and email input fields when the user is logged in */}
                     </>
                 ) : (
                     <>
@@ -66,6 +75,16 @@ export const ContactForm = () => {
                                 placeholder="Email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <div className="row">
+                            <input
+                                type="text"
+                                id="phone"
+                                className="form-control"
+                                placeholder="phone"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
                             />
                         </div>
                     </>

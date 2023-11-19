@@ -53,6 +53,7 @@ def user_sign_up():
     new_user_data = request.json
     name = new_user_data.get("name")
     email = new_user_data.get("email")
+    phone = new_user_data.get("phone")
     hashed_password = new_user_data.get("hashed_password")
 
     if not name or not email or not hashed_password:
@@ -63,7 +64,7 @@ def user_sign_up():
     if existing_user:
         raise APIException("User with this email already exists", 400)
 
-    new_user = User(name=name, email=email, hashed_password=hashed_password)
+    new_user = User(name=name, email=email, hashed_password=hashed_password, phone=phone)
     db.session.add(new_user)
     db.session.commit()
 
@@ -128,15 +129,17 @@ def create_contact_request():
         data = request.get_json()
         name = data.get('name')
         email = data.get('email')
+        phone = data.get('phone')
         datatype = data.get('datatype')
         text = data.get('text')
 
-        if not all([name, email, datatype, text]):
+        # Check for missing required fields
+        if not all([name, email, datatype, text]) or phone is None:
             return jsonify({'error': 'Missing required fields'}), 400
 
-        new_contact_request = ContactRequest(name=name, email=email, datatype=datatype, text=text)
-        print(f"New contact request: {new_contact_request.name}, {new_contact_request.email}, {new_contact_request.datatype}, {new_contact_request.text}")
-        
+        new_contact_request = ContactRequest(name=name, email=email, phone=phone, datatype=datatype, text=text)
+        print(f"New contact request: {new_contact_request.name}, {new_contact_request.email}, {new_contact_request.phone}, {new_contact_request.datatype}, {new_contact_request.text}")
+
         db.session.add(new_contact_request)
         db.session.commit()
 

@@ -20,35 +20,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 			],
 			accessToken: undefined,
 			user: undefined,
-			contact_requests: [],
-			favorites: [],
+			contact_requests: []
 		},
 
 
 		actions: {
-			contact: async ({ name, email, datatype, text }) => {
-
-				const response = await fetch(`${baseApiUrl}/api/contact-requests`, {
-					method: "POST",
-					body: JSON.stringify({
-						name: name,
-						email: email,
-						datatype: datatype,
-						text: text,
-					}),
-					headers: {
-						"Content-Type": "application/json"
+			contact: async ({ name, email, phone, datatype, text }) => {
+				try {
+					const response = await fetch(`${baseApiUrl}/api/contact-requests`, {
+						method: "POST",
+						body: JSON.stringify({
+							name: name,
+							email: email,
+							phone: phone,
+							datatype: datatype,
+							text: text,
+						}),
+						headers: {
+							"Content-Type": "application/json"
+						}
+					});
+			
+					if (response.ok) {
+						const body = await response.json();
+						console.log("Contact request submitted successfully:", body);
+					} else {
+						throw new Error(`Failed to submit contact request. Status: ${response.status}, Message: ${response.statusText}`);
 					}
-				});
-
-				if (response.ok) {
-					const body = await response.json();
-					console.log("Contact request submitted successfully:", body);
-				} else {
-					throw new Error('Failed to submit contact request');
+				} catch (error) {
+					console.error("Contact request error:", error);
+					throw error; // rethrow the error to propagate it further
 				}
-			}
-			,
+			},
 
 
 
@@ -91,13 +94,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.removeItem("user");
 
 			},
-			signUp: async ({ email, hashed_password, name}) => {
+			signUp: async ({ email, hashed_password, name, phone}) => {
 				const response = await fetch(`${baseApiUrl}/api/sign-up`, {
 					method: "POST",
 					body: JSON.stringify({
 						email: email,
 						hashed_password: hashed_password,
-						name: name
+						name: name,
+						phone: phone
 					}),
 					headers: {
 						"Content-Type": "application/json",
@@ -124,76 +128,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						console.log(data)
 						setStore({ cocktails: data.results })
 					})
-			},
-
-			addToFavorites: async (userId, cocktailId, name, url) => {
-				console.log("api call: addToFavorites")
-				const response = await fetch(`${baseApiUrl}/api/favorites`, {
-					method: "POST",
-					body: JSON.stringify({
-						userId: userId,
-						cocktailId: cocktailId,
-						name: name,
-						url: url
-					},
-					),
-					headers: {
-						"Content-Type": "application/json",
-					}
-				}).then(response => {
-					if (response.status == 201) {
-						console.log("succesfully added to favorites")
-					} else {
-						console.log("Error when adding")
-					}
-				})
-
-			},
-			getAllFavorites: async (userId) => {
-				const response = await fetch(`${baseApiUrl}/api/favorites/all`, {
-					method: "POST",
-					body: JSON.stringify({
-						userId: userId
-					},
-					),
-					headers: {
-						"Content-Type": "application/json",
-					}
-				}).then(response => {
-					return response.json()
-				}).then(data => {
-					console.log(data)
-					setStore({
-						user: getStore().user,
-						accessToken: getStore().accessToken,
-						cocktails: getStore().cocktails,
-						favorites: data.favs
-					})
-					return data
-				})
-				return response
-			},
-
-			deleteFavorites: async (userId, drinkId) => {
-				console.log("api call: DeleteFromFavorite")
-				console.log(userId)
-				const response = await fetch(`${baseApiUrl}/api/favorites`, {
-					method: "DELETE",
-					body: JSON.stringify({
-						userId: userId,
-						drinkId: drinkId
-					},
-					),
-					headers: {
-						"Content-Type": "application/json",
-					}
-				}).then(response => {
-					if (response.status == 201) {
-						console.log("succesfully added to favorites")
-					} else {
-						console.log("Error when adding")
-					}
-				})
 			},
 			resetPassword: async ({ email, newPassword, token }) => {
                 try {

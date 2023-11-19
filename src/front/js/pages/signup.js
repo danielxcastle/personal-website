@@ -8,6 +8,7 @@ export const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
     const [age, setAge] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ export const SignUp = () => {
             const response = await actions.signUp({
                 email: email,
                 hashed_password: password,
+                phone: phone,
                 name: name
             });
 
@@ -52,6 +54,13 @@ export const SignUp = () => {
                     value={email}
                     placeholder="Email"
                     onChange={(event) => setEmail(event.target.value)}
+                ></input>
+                <input
+                    className="form-control m-3"
+                    type="phone"
+                    value={phone}
+                    placeholder="Phone Number"
+                    onChange={(event) => setPhone(event.target.value)}
                 ></input>
                 <input
                     className="form-control m-3"
